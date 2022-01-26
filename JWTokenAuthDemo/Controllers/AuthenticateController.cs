@@ -1,4 +1,5 @@
 ﻿using JWTokenAuthDemo.IdentityAuth;
+using JWTokenAuthDemo.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -25,8 +26,30 @@ namespace JWTokenAuthDemo.Controllers
             _configuration = configuration;
         }
 
-
+        [HttpPost]
+        [Route("Register")]
         
+        public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        {
+            var userExit = await _userManager.FindByNameAsync(model.UserName);
+                if(userExit != null)
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
+
+            ApplicationUser user = new()
+            {
+                Email = model.Email,
+                SecurityStamp = Guid.NewGuid().ToString(),
+                UserName = model.UserName
+            };
+
+
+            var result = await _userManager.CreateAsync(user, model.Password);
+            if (!result.Succeeded)
+                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please try again" });
+
+            return Ok(new Response { Status = "Success", Message = "User created successfully!" });
+
+        }
 
     }
 }
