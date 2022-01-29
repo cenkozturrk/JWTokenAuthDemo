@@ -10,9 +10,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.Xml;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -57,7 +59,39 @@ namespace JWTokenAuthDemo
                 });
 
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "JwtAuth",
+                    Version = "v1",
+                    Description = "Authentication & Authorization in ASP.NET Core with Jwt € Swagger"
+                });
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+                {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "Enter 'bearer' [space] and then your valid token in the text input below.\r\n\r\nExample: \"Bearer ...............................\""
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        }
+                        , new string[] {}
+                    }
 
+                });
+            });
 
             services.AddDbContext<ApplicationDbContext>(option => option.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
@@ -81,8 +115,8 @@ namespace JWTokenAuthDemo
             app.UseStaticFiles();
 
             app.UseRouting();
-
-
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
             app.UseAuthorization();
             app.UseAuthorization();
 
