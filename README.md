@@ -29,20 +29,11 @@ Before running this project, ensure you have the following installed:
 3. **Token Validation:**
    - The server validates the token's signature, expiration, and claims before granting access to protected resources.
 
-### Visual Guide
-
-1. **Login and Token Generation:**
-
-   ![Login and Token Generation](https://user-images.githubusercontent.com/88964984/187240979-22aea214-0bda-494a-9a80-ec1b2f50d412.png)
-
-2. **Securing API Requests:**
-
-   ![Securing API Requests](https://user-images.githubusercontent.com/88964984/187241081-9f9c26e4-b0a6-4682-aee0-e37d9092e9d1.png)
 
 ## Getting Started
 
 1. Clone this repository:
 
    ```bash
-   git clone https://github.com/yourusername/jwt-auth-demo.git
+   git clone https://github.com/yourusername/JWTokenAuthDemo.git
    cd JWTokenAuthDemo
